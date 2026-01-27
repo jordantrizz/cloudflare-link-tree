@@ -1,8 +1,15 @@
+import config from "./config"
 import links from "./links"
 
 class AvatarRewriter {
     element(element) {
-        element.setAttribute("src", "https://github.com/bradgarropy.png")
+        const photoUrl = config.profile.photoUrl
+        // Check if photoUrl is a local file or a full URL
+        const imageUrl =
+            photoUrl.startsWith("http://") || photoUrl.startsWith("https://")
+                ? photoUrl
+                : photoUrl
+        element.setAttribute("src", imageUrl)
     }
 }
 
@@ -42,7 +49,7 @@ class LinkRewriter {
 
 class NameRewriter {
     element(element) {
-        element.setInnerContent("Brad Garropy")
+        element.setInnerContent(config.profile.name)
     }
 }
 
@@ -70,7 +77,7 @@ class SocialRewriter {
 
 class TitleRewriter {
     element(element) {
-        element.setInnerContent("Brad Garropy")
+        element.setInnerContent(config.profile.title)
     }
 }
 

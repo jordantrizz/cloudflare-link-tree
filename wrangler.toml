@@ -6,6 +6,7 @@ route = ""
 zone_id = ""
 target_type = "webpack"
 webpack_config = "webpack.config.js"
+assets = { directory = "public/" }
 
 [dev]
 port = 8000

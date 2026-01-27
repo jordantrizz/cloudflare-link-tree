@@ -1,1 +1,1 @@
-https://cloudflare-link-tree.bradgarropy.workers.dev/
+https://cloudflare-link-tree.jtrask.workers.dev
