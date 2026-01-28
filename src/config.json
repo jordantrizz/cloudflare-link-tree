@@ -41,5 +41,10 @@
       "url": "https://www.linkedin.com/in/jordantraskcto/",
       "fa-name": "linkedin"
     }
-  ]
+  ],
+  "icons": {
+    "color": "white",
+    "textIconColor": "black",
+    "size": 24
+  }
 }

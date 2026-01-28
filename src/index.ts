@@ -9,14 +9,12 @@ import {
     TitleRewriter,
 } from "./rewriters"
 import links from "./links"
-import {Router} from "itty-router"
-import {json, error} from "itty-router-extras"
+import {Router, json, error} from "itty-router"
 
 const router = Router()
 
 router.get("/links", () => {
-    const response = json(links)
-    return response
+    return json(links)
 })
 
 router.get("*", async () => {
@@ -39,10 +37,9 @@ router.get("*", async () => {
 })
 
 router.all("*", () => {
-    const response = error(500, "This service only accepts GET requests.")
-    return response
+    return error(500, "This service only accepts GET requests.")
 })
 
-addEventListener("fetch", event => {
-    event.respondWith(router.handle(event.request))
-})
+export default {
+    fetch: router.fetch
+}

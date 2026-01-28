@@ -1,12 +1,66 @@
 import config from "./config"
 import links from "./links"
-import customIcons, { VALID_FONT_AWESOME_ICONS } from "./icons"
+import customIcons, { VALID_FONT_AWESOME_ICONS, VALID_FONT_AWESOME_BRAND_ICONS, VALID_FONT_AWESOME_SOLID_ICONS } from "./icons"
+
+// Get icon configuration with defaults
+const iconConfig = config.icons || {}
+const iconColor = iconConfig.color || "white"
+const textIconColor = iconConfig.textIconColor || "black"
+const iconSize = iconConfig.size || 24
 
 /**
  * Validates if a Font Awesome icon name exists in the curated list
  */
 function isValidFontAwesomeIcon(iconName: string): boolean {
     return VALID_FONT_AWESOME_ICONS.has(iconName)
+}
+
+/**
+ * Determines the correct Font Awesome style (solid or brands) for an icon
+ */
+function getFontAwesomeStyle(iconName: string): "solid" | "brands" {
+    if (VALID_FONT_AWESOME_BRAND_ICONS.has(iconName)) {
+        return "brands"
+    }
+    return "solid"
+}
+
+/**
+ * Generates HTML for an icon with configurable color and size
+ */
+function generateIconHTML(link, showLabel: boolean = false, color: string = iconColor): string {
+    let iconHTML = ""
+
+    if (link["fa-name"]) {
+        // Font Awesome icon using CSS classes
+        const faName = link["fa-name"]
+        
+        if (isValidFontAwesomeIcon(faName)) {
+            // Valid icon - determine correct style (solid or brands)
+            const style = getFontAwesomeStyle(faName)
+            iconHTML = `<i class="fa-${style} fa-${faName}" style="width: ${iconSize}px; height: ${iconSize}px; display: inline-block; font-size: ${iconSize}px; color: ${color};"></i>`
+        } else {
+            // Invalid icon - fallback to globe and log error
+            console.error(`Invalid Font Awesome icon: "${faName}". Falling back to "globe".`)
+            iconHTML = `<i class="fa-solid fa-globe" style="width: ${iconSize}px; height: ${iconSize}px; display: inline-block; font-size: ${iconSize}px; color: ${color};"></i>`
+        }
+    } else if (link.svg) {
+        // Custom SVG icon
+        const customSvg = customIcons[link.svg]
+        if (customSvg) {
+            iconHTML = customSvg
+        } else {
+            // Fallback if custom icon not found
+            console.warn(`Custom icon "${link.svg}" not found in registry`)
+            if (showLabel) {
+                iconHTML = ""
+            } else {
+                iconHTML = `<span>${link.name}</span>`
+            }
+        }
+    }
+
+    return iconHTML
 }
 
 class AvatarRewriter {
@@ -46,19 +100,31 @@ class HeadRewriter {
                 html: true,
             },
         )
+        element.append(
+            `<style>
+                #links a:hover i {
+                    color: white !important;
+                }
+            </style>`,
+            {
+                html: true,
+            },
+        )
     }
 }
 
 class LinkRewriter {
     element(element) {
-        links.forEach(link =>
+        links.forEach(link => {
+            const iconHTML = generateIconHTML(link, true, textIconColor)
+            const iconPrefix = iconHTML ? `${iconHTML} ` : ""
             element.append(
-                `<a href="${link.url}" target="_blank">${link.name}</a>`,
+                `<a href="${link.url}" target="_blank">${iconPrefix}${link.name}</a>`,
                 {
                     html: true,
                 },
-            ),
-        )
+            )
+        })
     }
 }
 
@@ -76,37 +142,11 @@ class ProfileRewriter {
 
 class SocialRewriter {
     element(element) {
-        element.setAttribute("style", "fill: white")
+        element.setAttribute("style", `fill: ${iconColor}`)
 
         links.forEach(link => {
-            let iconHTML = ""
-
-            if (link["fa-name"]) {
-                // Font Awesome icon using CSS classes
-                const faName = link["fa-name"]
-                
-                if (isValidFontAwesomeIcon(faName)) {
-                    // Valid icon
-                    iconHTML = `<i class="fa fa-solid fa-${faName}" style="width: 1em; height: 1em; display: inline-block;"></i>`
-                } else {
-                    // Invalid icon - fallback to globe and log error
-                    console.error(`Invalid Font Awesome icon: "${faName}". Falling back to "globe".`)
-                    iconHTML = `<i class="fa fa-solid fa-globe" style="width: 1em; height: 1em; display: inline-block;"></i>`
-                }
-            } else if (link.svg) {
-                // Custom SVG icon
-                const customSvg = customIcons[link.svg]
-                if (customSvg) {
-                    iconHTML = customSvg
-                } else {
-                    // Fallback if custom icon not found
-                    console.warn(`Custom icon "${link.svg}" not found in registry`)
-                    iconHTML = `<span>${link.name}</span>`
-                }
-            }
-
+            const iconHTML = generateIconHTML(link, false)
             element.append(
-                // eslint-disable-next-line quotes
                 `<a href="${link.url}" target="_blank">${iconHTML}</a>`,
                 {
                     html: true,

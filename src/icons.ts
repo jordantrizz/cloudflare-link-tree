@@ -7,10 +7,9 @@ const customIcons: Record<string, string> = {
     // "myCustomIcon": '<svg xmlns="http://www.w3.org/2000/svg" style="fill: inherit; width: inherit;" role="img" viewBox="0 0 24 24"><title>My Icon</title><path d="M..."/></svg>'
 }
 
-// Curated list of valid Font Awesome 6.4.0 Solid icons
-// This is used for runtime validation to prevent silent failures with invalid icon names
-export const VALID_FONT_AWESOME_ICONS = new Set([
-    // Social media
+// Font Awesome Brand icons (fa-brands)
+// Social media and company logos
+export const VALID_FONT_AWESOME_BRAND_ICONS = new Set([
     "github",
     "instagram",
     "facebook",
@@ -26,7 +25,13 @@ export const VALID_FONT_AWESOME_ICONS = new Set([
     "whatsapp",
     "pinterest",
     "snapchat",
-    
+    "wordpress",
+    "drupal",
+])
+
+// Curated list of valid Font Awesome 6.4.0 Solid icons
+// This is used for runtime validation to prevent silent failures with invalid icon names
+export const VALID_FONT_AWESOME_SOLID_ICONS = new Set([
     // Common utility/action icons
     "globe",
     "mug-hot",
@@ -54,11 +59,6 @@ export const VALID_FONT_AWESOME_ICONS = new Set([
     "cloud",
     "dropbox",
     "google-drive",
-    "wordpress",
-    "drupal",
-    "react",
-    "node",
-    "python",
     "calendar",
     "clock",
     "map",
@@ -75,6 +75,12 @@ export const VALID_FONT_AWESOME_ICONS = new Set([
     "minus",
     "arrow-up",
     "arrow-down",
+])
+
+// Combined set for backward compatibility
+export const VALID_FONT_AWESOME_ICONS = new Set([
+    ...VALID_FONT_AWESOME_BRAND_ICONS,
+    ...VALID_FONT_AWESOME_SOLID_ICONS,
 ])
 
 export default customIcons

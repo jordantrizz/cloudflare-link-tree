@@ -1,9 +1,42 @@
 # AGENTS.md
 
-## Development Notes
-Commit format: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `perf:`, `test:`, `chore:`
+## Cloudflare Workers Deployment Notes
 
-## Overview
+### Commit Format
+Use conventional commits: `feat:`, `fix:`, `docs:`, `style:`, `refactor:`, `perf:`, `test:`, `chore:`
+
+Example: `git commit -m "fix: resolve TypeScript compilation errors"`
+
+### Deployment Pipeline
+- **Git**: Push to `master` branch triggers automatic Cloudflare build
+- **Build Command**: `npm run build`
+- **Deploy Command**: `npm run deploy` or `wrangler deploy`
+- **Bundler**: Wrangler's built-in esbuild (no webpack)
+
+### TypeScript Configuration
+- **Version**: 5.4+ targeting ES2022
+- **Module System**: ESNext with bundler resolution
+- **Type Definitions**: `["@cloudflare/workers-types", "node"]`
+
+### Key Dependencies
+| Package | Version | Purpose |
+|---------|---------|---------|
+| wrangler | ^4.0.0 | Cloudflare CLI & bundler |
+| itty-router | ^5.0.0 | Lightweight router |
+| typescript | ^5.4.0 | TypeScript compiler |
+| @cloudflare/workers-types | ^4.x | CF Workers API types |
+
+### Scripts
+- `npm run dev` - Start local development server (http://localhost:8787)
+- `npm run build` - Validate icons + dry-run deploy
+- `npm run deploy` - Deploy to Cloudflare Workers
+- `npm run validate` - Validate Font Awesome icons only
+- `npm run lint` - Run ESLint
+- `npm run format` - Format with Prettier
+
+---
+
+## Project Overview
 Two icon methods: **Font Awesome** (lightweight, CSS-based) and **Custom SVG** (inline, for unique icons).
 
 ## Configuration
@@ -29,6 +62,17 @@ Browse available icons: https://fontawesome.com/icons (3,600+ Solid icons availa
 
 Common icons: `github`, `instagram`, `facebook`, `linkedin`, `globe`, `mug-hot`, `wordpress`
 
-## Development
-- Run: `wrangler dev`
-- Build: `wrangler build`
+## Local Development
+```bash
+# Install dependencies
+npm install
+
+# Start local development server (http://localhost:8787)
+npm run dev
+
+# Test in browser
+# Navigate to http://localhost:8787
+
+# Deploy to production
+npm run deploy
+```
