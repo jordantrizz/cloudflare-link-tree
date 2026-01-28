@@ -1,7 +1,8 @@
 interface Link {
     name: string
     url: string
-    svg: string
+    "fa-name"?: string
+    svg?: string
 }
 
 interface Profile {
