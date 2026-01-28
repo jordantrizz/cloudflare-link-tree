@@ -1,4 +1,5 @@
 const path = require("path")
+const FontAwesomeIconValidatorPlugin = require("./webpack-fa-icon-validator")
 
 module.exports = {
     entry: "./src/index.ts",
@@ -20,4 +21,5 @@ module.exports = {
             },
         ],
     },
+    plugins: [new FontAwesomeIconValidatorPlugin()],
 }

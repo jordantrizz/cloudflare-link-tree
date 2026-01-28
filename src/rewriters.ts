@@ -1,6 +1,13 @@
 import config from "./config"
 import links from "./links"
-import customIcons from "./icons"
+import customIcons, { VALID_FONT_AWESOME_ICONS } from "./icons"
+
+/**
+ * Validates if a Font Awesome icon name exists in the curated list
+ */
+function isValidFontAwesomeIcon(iconName: string): boolean {
+    return VALID_FONT_AWESOME_ICONS.has(iconName)
+}
 
 class AvatarRewriter {
     element(element) {
@@ -76,7 +83,16 @@ class SocialRewriter {
 
             if (link["fa-name"]) {
                 // Font Awesome icon using CSS classes
-                iconHTML = `<i class="fa fa-solid fa-${link["fa-name"]}" style="width: 1em; height: 1em; display: inline-block;"></i>`
+                const faName = link["fa-name"]
+                
+                if (isValidFontAwesomeIcon(faName)) {
+                    // Valid icon
+                    iconHTML = `<i class="fa fa-solid fa-${faName}" style="width: 1em; height: 1em; display: inline-block;"></i>`
+                } else {
+                    // Invalid icon - fallback to globe and log error
+                    console.error(`Invalid Font Awesome icon: "${faName}". Falling back to "globe".`)
+                    iconHTML = `<i class="fa fa-solid fa-globe" style="width: 1em; height: 1em; display: inline-block;"></i>`
+                }
             } else if (link.svg) {
                 // Custom SVG icon
                 const customSvg = customIcons[link.svg]
