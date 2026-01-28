@@ -84,11 +84,38 @@ class BodyRewriter {
     }
 }
 
+/**
+ * Generates an SVG favicon as a data URI from letters
+ */
+function generateLetterFavicon(letters: string, bgColor: string, textColor: string): string {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <rect width="100" height="100" rx="20" fill="${bgColor}"/>
+        <text x="50" y="50" font-family="Arial, sans-serif" font-size="${letters.length > 2 ? 35 : 50}" font-weight="bold" fill="${textColor}" text-anchor="middle" dominant-baseline="central">${letters}</text>
+    </svg>`
+    // Encode for data URI
+    const encoded = btoa(svg)
+    return `data:image/svg+xml;base64,${encoded}`
+}
+
 class HeadRewriter {
     element(element) {
+        // Favicon
+        const faviconConfig = config.favicon || {}
+        const faviconType = faviconConfig.type || "letters"
+        
+        let faviconUrl: string
+        if (faviconType === "url" && faviconConfig.url) {
+            faviconUrl = faviconConfig.url
+        } else {
+            // Generate from letters
+            const letters = faviconConfig.letters || config.profile.name.charAt(0).toUpperCase()
+            const bgColor = faviconConfig.backgroundColor || "#4f46e5"
+            const textColor = faviconConfig.textColor || "white"
+            faviconUrl = generateLetterFavicon(letters, bgColor, textColor)
+        }
+        
         element.append(
-            // eslint-disable-next-line quotes
-            '<link rel="icon" type="image/png" href="https://bg-codes.netlify.app/favicon.png">',
+            `<link rel="icon" type="image/svg+xml" href="${faviconUrl}">`,
             {
                 html: true,
             },
@@ -110,6 +137,46 @@ class HeadRewriter {
                 html: true,
             },
         )
+
+        // Google Analytics
+        const gaId = config.analytics?.googleAnalyticsId
+        if (gaId) {
+            // Detect GA4 (G-) vs Universal Analytics (UA-)
+            if (gaId.startsWith("G-")) {
+                // Google Analytics 4 (gtag.js)
+                element.append(
+                    `<script async src="https://www.googletagmanager.com/gtag/js?id=${gaId}"></script>
+                    <script>
+                        window.dataLayer = window.dataLayer || [];
+                        function gtag(){dataLayer.push(arguments);}
+                        gtag('js', new Date());
+                        gtag('config', '${gaId}');
+                    </script>`,
+                    { html: true },
+                )
+            } else if (gaId.startsWith("UA-")) {
+                // Universal Analytics (legacy)
+                element.append(
+                    `<script async src="https://www.google-analytics.com/analytics.js"></script>
+                    <script>
+                        window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+                        ga('create', '${gaId}', 'auto');
+                        ga('send', 'pageview');
+                    </script>`,
+                    { html: true },
+                )
+            } else if (gaId.startsWith("GTM-")) {
+                // Google Tag Manager
+                element.append(
+                    `<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+                    })(window,document,'script','dataLayer','${gaId}');</script>`,
+                    { html: true },
+                )
+            }
+        }
     }
 }
 
@@ -118,8 +185,9 @@ class LinkRewriter {
         links.forEach(link => {
             const iconHTML = generateIconHTML(link, true, textIconColor)
             const iconPrefix = iconHTML ? `${iconHTML} ` : ""
+            const targetAttr = link.newTab ? ' target="_blank" rel="noopener noreferrer"' : ''
             element.append(
-                `<a href="${link.url}" target="_blank">${iconPrefix}${link.name}</a>`,
+                `<a href="${link.url}"${targetAttr}>${iconPrefix}${link.name}</a>`,
                 {
                     html: true,
                 },

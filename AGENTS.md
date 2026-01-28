@@ -57,6 +57,51 @@ Two icon methods: **Font Awesome** (lightweight, CSS-based) and **Custom SVG** (
 1. Add to `src/icons.ts`: `{ "myIcon": '<svg>...</svg>' }`
 2. Reference in `config.json`: `{ "svg": "myIcon" }`
 
+## Google Analytics
+
+Add your tracking ID to `config.json`:
+
+```json
+{
+  "analytics": {
+    "googleAnalyticsId": "G-XXXXXXXXXX"
+  }
+}
+```
+
+Supported formats:
+- **GA4**: `G-XXXXXXXXXX` (recommended)
+- **Universal Analytics**: `UA-XXXXXXXX-X` (legacy)
+- **Google Tag Manager**: `GTM-XXXXXXX`
+
+## Favicon
+
+Configure the favicon in `config.json`. Two types are supported:
+
+**Generated from letters (default):**
+```json
+{
+  "favicon": {
+    "type": "letters",
+    "letters": "JT",
+    "backgroundColor": "#4f46e5",
+    "textColor": "white"
+  }
+}
+```
+
+**Custom URL:**
+```json
+{
+  "favicon": {
+    "type": "url",
+    "url": "https://example.com/favicon.png"
+  }
+}
+```
+
+If omitted, the favicon defaults to the first letter of your profile name.
+
 ## Font Awesome Icons
 Browse available icons: https://fontawesome.com/icons (3,600+ Solid icons available)
 

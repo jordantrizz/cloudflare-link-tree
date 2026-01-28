@@ -9,42 +9,58 @@
     {
       "name": "Buy me a Coffee",
       "url": "https://ko-fi.com/jordantrask",
-      "fa-name": "mug-hot"
+      "fa-name": "mug-hot",
+      "newTab": true
     },
     {
       "name": "Personal Website",
       "url": "https://jordantrask.com",
-      "fa-name": "globe"
+      "fa-name": "globe",
+      "newTab": true
     },
     {
       "name": "Managing WP - Website",
       "url": "https://managingwp.io/",
-      "fa-name": "wordpress"
+      "fa-name": "wordpress",
+      "newTab": true
     },
     {
       "name": "Managing WP - Facebook Group",
       "url": "https://www.facebook.com/groups/managingwordpress",
-      "fa-name": "facebook"
+      "fa-name": "facebook",
+      "newTab": true
     },
     {
       "name": "GitHub",
       "url": "https://github.com/jordantrizz",
-      "fa-name": "github"
+      "fa-name": "github",
+      "newTab": true
     },
     {
       "name": "Instagram",
       "url": "https://instagram.com/jordantrizz",
-      "fa-name": "instagram"
+      "fa-name": "instagram",
+      "newTab": true
     },
     {
       "name": "LinkedIn",
       "url": "https://www.linkedin.com/in/jordantraskcto/",
-      "fa-name": "linkedin"
+      "fa-name": "linkedin",
+      "newTab": true
     }
   ],
   "icons": {
     "color": "white",
     "textIconColor": "black",
     "size": 24
+  },
+  "analytics": {
+    "googleAnalyticsId": ""
+  },
+  "favicon": {
+    "type": "letters",
+    "letters": "JT",
+    "backgroundColor": "#4f46e5",
+    "textColor": "white"
   }
 }

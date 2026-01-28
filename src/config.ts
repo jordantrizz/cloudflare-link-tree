@@ -3,6 +3,11 @@ interface Link {
     url: string
     "fa-name"?: string
     svg?: string
+    /**
+     * Whether to open the link in a new tab
+     * @default false
+     */
+    newTab?: boolean
 }
 
 interface Profile {
@@ -35,6 +40,40 @@ interface IconConfig {
     size?: number
 }
 
+interface AnalyticsConfig {
+    /**
+     * Google Analytics Measurement ID (e.g., "G-XXXXXXXXXX" for GA4 or "UA-XXXXXXXX-X" for Universal Analytics)
+     */
+    googleAnalyticsId?: string
+}
+
+interface FaviconConfig {
+    /**
+     * Type of favicon: "url" for external image, "letters" for generated from text
+     * @default "letters"
+     */
+    type?: "url" | "letters"
+    /**
+     * URL to favicon image (when type is "url")
+     */
+    url?: string
+    /**
+     * Letters to display in favicon (when type is "letters", max 2-3 chars recommended)
+     * @default First letter of profile name
+     */
+    letters?: string
+    /**
+     * Background color for generated favicon (CSS color)
+     * @default "#4f46e5" (indigo)
+     */
+    backgroundColor?: string
+    /**
+     * Text color for generated favicon (CSS color)
+     * @default "white"
+     */
+    textColor?: string
+}
+
 interface Config {
     profile: Profile
     links: Link[]
@@ -42,6 +81,14 @@ interface Config {
      * Global icon configuration
      */
     icons?: IconConfig
+    /**
+     * Analytics tracking configuration
+     */
+    analytics?: AnalyticsConfig
+    /**
+     * Favicon configuration
+     */
+    favicon?: FaviconConfig
 }
 
 import configData from "./config.json"
